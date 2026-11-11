@@ -40,18 +40,112 @@ footer{border-top:1px solid var(--border);padding:20px;text-align:center;color:v
 button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
 @media(max-width:600px){.header{padding:28px 20px}.header-inner{align-items:flex-start;flex-direction:column}main{padding:24px 20px 36px}.toolbar{align-items:stretch;flex-direction:column}.search{width:100%}.grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.dashboard-card{transition:none}.dashboard-card:hover{transform:none}}
+/* Bandeau : grand logo à gauche et thème discret en haut à droite */
+.header {
+  position: relative;
+  padding: 18px 34px;
+  background: #2e324f;
+  color: #ffffff;
+}
+.header-inner {
+  max-width: none;
+  min-height: 170px;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 42px;
+}
+.header-logo {
+  display: block;
+  width: 280px;
+  height: auto;
+  flex-shrink: 0;
+}
+.header-title {
+  padding-right: 130px;
+}
+.header-title h1 {
+  margin: 0;
+  font-size: clamp(25px, 3vw, 38px);
+  letter-spacing: -0.8px;
+}
+.header-title .subtitle {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 1;
+}
+.theme-button {
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.theme-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+@media (max-width: 700px) {
+  .header {
+    padding: 42px 20px 24px;
+  }
+  .header-inner {
+    min-height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .header-logo {
+    width: 220px;
+    max-width: 100%;
+  }
+  .header-title {
+    padding-right: 0;
+  }
+  .header-title h1 {
+    font-size: 28px;
+  }
+  .theme-button {
+    top: 12px;
+    right: 14px;
+  }
+}
 </style>
 </head>
 <body>
 <header class="header">
- <div class="header-inner">
-  <div>
-   <div class="brand">ADM VALUE</div>
-   <h1>Portail de suivi</h1>
-   <p class="subtitle">Tous vos dashboards, un seul point d’accès.</p>
+  <div class="header-inner">
+    <img
+      class="header-logo"
+      src="./logo-adm.png"
+      alt="ADM VALUE"
+    >
+    <div class="header-title">
+      <h1>Portail de suivi</h1>
+      <p class="subtitle">
+        Tous vos dashboards, un seul point d’accès.
+      </p>
+    </div>
+    <button
+      class="theme-button"
+      id="themeButton"
+      type="button"
+      aria-label="Changer le thème"
+    >
+      Mode sombre
+    </button>
   </div>
-  <button class="theme-button" id="themeButton" type="button">Mode sombre</button>
- </div>
 </header>
 <main>
  <div class="toolbar">
