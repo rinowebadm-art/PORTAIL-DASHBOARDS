@@ -390,5 +390,26 @@ afficherDashboards();
     embellirCartesADM();
   }
 </script>
+  <script>
+  function desactiverSuggestionsRecherche() {
+    const champ = document.querySelector(
+      'input[placeholder="Rechercher un dashboard..."]'
+    );
+    if (!champ) return;
+    champ.setAttribute("autocomplete", "off");
+    champ.setAttribute("spellcheck", "false");
+    if (champ.form) {
+      champ.form.setAttribute("autocomplete", "off");
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      desactiverSuggestionsRecherche
+    );
+  } else {
+    desactiverSuggestionsRecherche();
+  }
+</script>
 </body>
 </html>
