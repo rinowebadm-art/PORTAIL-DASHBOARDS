@@ -122,105 +122,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
   }
 }
 </style>
-  <style>
-  /* Fond software : halos et grille discrète */
-  body {
-    background-color: #dce8f3 !important;
-    background-image:
-      radial-gradient(
-        ellipse at 15% 35%,
-        rgba(36, 181, 220, 0.30),
-        transparent 52%
-      ),
-      radial-gradient(
-        ellipse at 85% 55%,
-        rgba(126, 99, 211, 0.25),
-        transparent 52%
-      ),
-      linear-gradient(
-        rgba(65, 110, 150, 0.06) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        90deg,
-        rgba(65, 110, 150, 0.06) 1px,
-        transparent 1px
-      ),
-      linear-gradient(135deg, #eaf2f8, #cedfec) !important;
-    background-size:
-      auto,
-      auto,
-      44px 44px,
-      44px 44px,
-      auto !important;
-    background-attachment: fixed !important;
-  }
-  /* Cartes en verre dépoli */
-  .adm-dashboard-card {
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    border-radius: 26px !important;
-    backdrop-filter: blur(18px) saturate(145%);
-    -webkit-backdrop-filter: blur(18px) saturate(145%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.08),
-      0 18px 42px rgba(30, 54, 85, 0.18) !important;
-  }
-  .adm-dashboard-card.adm-liris {
-    background: linear-gradient(
-      135deg,
-      rgba(16, 66, 87, 0.82),
-      rgba(30, 125, 149, 0.55)
-    ) !important;
-  }
-  .adm-dashboard-card.adm-asap {
-    background: linear-gradient(
-      135deg,
-      rgba(49, 43, 88, 0.82),
-      rgba(113, 91, 163, 0.55)
-    ) !important;
-  }
-  /* Reflet lumineux */
-  .adm-dashboard-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0.16),
-      transparent 42%,
-      transparent 75%,
-      rgba(255, 255, 255, 0.05)
-    );
-    pointer-events: none;
-  }
-  .adm-dashboard-card .adm-card-title {
-    color: #ffffff !important;
-    text-shadow: 0 2px 12px rgba(10, 28, 55, 0.20);
-  }
-  .adm-dashboard-card p {
-    color: #f0f6ff !important;
-  }
-  /* Boutons translucides */
-  .adm-dashboard-card .adm-card-button {
-    background: rgba(255, 255, 255, 0.13) !important;
-    border: 1px solid rgba(255, 255, 255, 0.38) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.20),
-      0 6px 16px rgba(10, 28, 55, 0.08) !important;
-  }
-  .adm-dashboard-card .adm-card-button:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
-    border-color: rgba(255, 255, 255, 0.70) !important;
-  }
-  .adm-dashboard-card:hover {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.45),
-      0 24px 48px rgba(30, 54, 85, 0.25) !important;
-  }
-</style>
-</head>
+ </head>
 <body>
 <header class="header">
   <div class="header-inner">
@@ -436,78 +338,144 @@ afficherDashboards();
     }
   }
 </style>
-<script>
-  /* Identifie les cartes existantes sans modifier leurs liens */
-  function embellirCartesADM() {
-    const titres = Array.from(
-      document.querySelectorAll("h1, h2, h3, h4")
-    );
-    ["LIRIS", "ASAP"].forEach(function (nom) {
-      const titre = titres.find(function (element) {
-        return element.textContent.trim() === nom;
-      });
-      if (!titre) return;
-      let carte = titre.parentElement;
-      while (carte && carte !== document.body) {
-        const bouton = Array.from(
-          carte.querySelectorAll("a, button")
-        ).find(function (element) {
-          return /ouvrir le dashboard/i.test(element.textContent);
-        });
-        if (bouton) {
-          carte.classList.add(
-            "adm-dashboard-card",
-            nom === "LIRIS" ? "adm-liris" : "adm-asap"
-          );
-          titre.classList.add("adm-card-title");
-          bouton.classList.add("adm-card-button");
-          Array.from(carte.querySelectorAll("*")).forEach(
-            function (element) {
-              if (element.children.length !== 0) return;
-              const texte = element.textContent.trim();
-              if (texte === nom.charAt(0)) {
-                element.classList.add("adm-card-icon");
-              }
-              if (texte === "Production") {
-                element.classList.add("adm-card-badge");
-              }
-              if (/ouverture dans un nouvel onglet/i.test(texte)) {
-                element.classList.add("adm-card-note");
-              }
-            }
-          );
-          break;
-        }
-        carte = carte.parentElement;
-      }
-    });
+<style>
+  /* Verre transparent : aucun changement du fond de page */
+  .grid {
+    --glass-fill: rgba(255, 255, 255, 0.16);
+    --glass-edge: rgba(255, 255, 255, 0.95);
+    --glass-reflection: rgba(255, 255, 255, 0.55);
+    --glass-control: rgba(255, 255, 255, 0.22);
+    --glass-hover: rgba(255, 255, 255, 0.36);
+    --glass-glow: rgba(92, 166, 225, 0.24);
   }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", embellirCartesADM);
-  } else {
-    embellirCartesADM();
+  [data-theme="dark"] .grid {
+    --glass-fill: rgba(255, 255, 255, 0.035);
+    --glass-edge: rgba(200, 231, 255, 0.75);
+    --glass-reflection: rgba(255, 255, 255, 0.14);
+    --glass-control: rgba(255, 255, 255, 0.045);
+    --glass-hover: rgba(255, 255, 255, 0.10);
+    --glass-glow: rgba(114, 199, 255, 0.25);
   }
-</script>
-  <script>
-  function desactiverSuggestionsRecherche() {
-    const champ = document.querySelector(
-      'input[placeholder="Rechercher un dashboard..."]'
+  .dashboard-card {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    border-radius: 30px;
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    box-shadow:
+      inset 0 1px 0 var(--glass-reflection),
+      inset 0 0 18px rgba(150, 215, 255, 0.06),
+      0 0 14px var(--glass-glow),
+      0 14px 30px rgba(25, 47, 85, 0.10);
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  /* Reflet léger sur le verre, sans masquer le contenu */
+  .dashboard-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      125deg,
+      var(--glass-reflection),
+      transparent 32%,
+      transparent 75%,
+      rgba(155, 219, 255, 0.07)
     );
-    if (!champ) return;
-    champ.setAttribute("autocomplete", "off");
-    champ.setAttribute("spellcheck", "false");
-    if (champ.form) {
-      champ.form.setAttribute("autocomplete", "off");
+    opacity: 0.35;
+  }
+  .dashboard-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-4px);
+    background: var(--glass-control);
+    box-shadow:
+      inset 0 1px 0 var(--glass-reflection),
+      0 0 24px var(--glass-glow),
+      0 20px 38px rgba(25, 47, 85, 0.16);
+  }
+  /* Pastille ronde avec contour lumineux */
+  .dashboard-card .monogram {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: var(--glass-control);
+    border: 1px solid var(--glass-edge);
+    color: var(--blue);
+    font-size: 28px;
+    box-shadow:
+      inset 0 1px 0 var(--glass-reflection),
+      0 0 14px var(--glass-glow);
+  }
+  .dashboard-card .category {
+    padding: 7px 13px;
+    background: var(--glass-control);
+    border: 1px solid var(--glass-edge);
+    color: var(--text);
+  }
+  .dashboard-card h3 {
+    margin: 24px 0 12px;
+    color: var(--text);
+    font-size: clamp(30px, 3vw, 38px);
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .dashboard-card .description {
+    margin-bottom: 28px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  /* Bouton transparent : plus de fond bleu ou orange opaque */
+  .dashboard-card .open-link {
+    min-height: 50px;
+    padding: 14px 18px;
+    border-radius: 24px;
+    background: var(--glass-control);
+    border: 1px solid var(--glass-edge);
+    color: var(--text);
+    box-shadow:
+      inset 0 1px 0 var(--glass-reflection),
+      0 0 10px var(--glass-glow);
+    transition:
+      background 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .dashboard-card .open-link:hover {
+    background: var(--glass-hover);
+    filter: none;
+    box-shadow:
+      inset 0 1px 0 var(--glass-reflection),
+      0 0 18px var(--glass-glow);
+  }
+  .dashboard-card .new-tab {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+  @media (max-width: 700px) {
+    .dashboard-card {
+      padding: 24px;
     }
   }
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      desactiverSuggestionsRecherche
-    );
-  } else {
-    desactiverSuggestionsRecherche();
+  @media (prefers-reduced-motion: reduce) {
+    .dashboard-card,
+    .dashboard-card .open-link {
+      transition: none;
+    }
+    .dashboard-card:hover {
+      transform: none;
+    }
   }
-</script>
+</style>
 </body>
 </html>
