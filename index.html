@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portail de suivi — ADM VALUE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f7;--card:#fff;--soft:#f5f6fb;--border:#e4e7f2;--text:#3b4268;--muted:#7b83a6;--blue:#4a89c4;--shadow:0 6px 24px rgba(80,90,140,.09)}
+[data-theme="dark"]{--bg:#12162b;--card:#1b2038;--soft:#232948;--border:#2f3659;--text:#e6e9f7;--muted:#a5aed0;--blue:#78afe0;--shadow:0 6px 24px rgba(0,0,0,.22)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;flex-direction:column}
+button,input{font:inherit}
+.header{background:linear-gradient(135deg,#2b3358,#4a89c4);color:white;padding:38px 28px}
+.header-inner{max-width:1120px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.brand{margin-bottom:12px;font-size:12px;font-weight:700;letter-spacing:2px;opacity:.8}
+h1{margin:0;font-size:clamp(25px,4vw,38px);letter-spacing:-.8px}
+.subtitle{margin:12px 0 0;font-size:14px;line-height:1.6;opacity:.85}
+.theme-button{flex-shrink:0;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:white;padding:10px 16px;border-radius:12px;cursor:pointer;font-size:12px;font-weight:600}
+main{width:100%;max-width:1176px;margin:0 auto;padding:30px 28px 48px;flex:1}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}
+h2{margin:0;font-size:20px}
+.count{margin:7px 0 0;color:var(--muted);font-size:12px}
+.search{width:min(100%,340px);padding:13px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);outline:none}
+.search::placeholder{color:var(--muted)}
+.search:focus{border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.dashboard-card{display:flex;flex-direction:column;padding:26px;background:var(--card);border:1px solid var(--border);border-top:4px solid var(--accent);border-radius:18px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+.dashboard-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(60,80,130,.15)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.monogram{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:var(--soft);color:var(--accent);font-size:24px;font-weight:800}
+.category{background:var(--soft);color:var(--muted);padding:7px 11px;border-radius:20px;font-size:11px;font-weight:600}
+.dashboard-card h3{margin:22px 0 10px;font-size:24px;letter-spacing:-.5px}
+.description{margin:0 0 26px;color:var(--muted);font-size:13px;line-height:1.8;flex:1}
+.open-link{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--accent);color:white;padding:13px 16px;border-radius:11px;text-decoration:none;font-size:12px;font-weight:700}
+.open-link:hover{filter:brightness(1.08)}
+.new-tab{text-align:center;margin:10px 0 0;color:var(--muted);font-size:10px}
+.empty{color:var(--muted);padding:35px 0;text-align:center}
+footer{border-top:1px solid var(--border);padding:20px;text-align:center;color:var(--muted);font-size:11px}
+button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+@media(max-width:600px){.header{padding:28px 20px}.header-inner{align-items:flex-start;flex-direction:column}main{padding:24px 20px 36px}.toolbar{align-items:stretch;flex-direction:column}.search{width:100%}.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.dashboard-card{transition:none}.dashboard-card:hover{transform:none}}
+</style>
+</head>
+<body>
+<header class="header">
+ <div class="header-inner">
+  <div>
+   <div class="brand">ADM VALUE</div>
+   <h1>Portail de suivi</h1>
+   <p class="subtitle">Tous vos dashboards, un seul point d’accès.</p>
+  </div>
+  <button class="theme-button" id="themeButton" type="button">Mode sombre</button>
+ </div>
+</header>
+<main>
+ <div class="toolbar">
+  <div><h2>Vos dashboards</h2><p class="count" id="count" aria-live="polite"></p></div>
+  <input class="search" id="search" type="search" placeholder="Rechercher un dashboard..." aria-label="Rechercher un dashboard">
+ </div>
+ <div class="grid" id="dashboardGrid"></div>
+ <p class="empty" id="empty" hidden>Aucun dashboard ne correspond à votre recherche.</p>
+</main>
+<footer>ADM VALUE · Portail central des dashboards de suivi</footer>
+<script>
+/* Ajouter les futurs dashboards dans cette liste. */
+const DASHBOARDS = [
+ {nom:"LIRIS",categorie:"Production",description:"Accédez au dashboard de production et aux indicateurs de suivi LIRIS.",url:"https://rinowebadm-art.github.io/DASH-BOARD-LIRIS/",couleur:"#4a89c4"},
+ {nom:"ASAP",categorie:"Production",description:"Retrouvez le suivi de production, la DMT et les indicateurs de qualité ASAP.",url:"https://rinowebadm-art.github.io/DASH-BOARD-ASAP/",couleur:"#b9682d"}
+];
+const grid=document.getElementById("dashboardGrid");
+const search=document.getElementById("search");
+const count=document.getElementById("count");
+const empty=document.getElementById("empty");
+const themeButton=document.getElementById("themeButton");
+function normaliser(texte){return texte.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
+function creerElement(tag,classe,texte){
+ const element=document.createElement(tag);
+ if(classe)element.className=classe;
+ if(texte!==undefined)element.textContent=texte;
+ return element;
+}
+function afficherDashboards(){
+ const termes=normaliser(search.value).trim().split(/\s+/).filter(Boolean);
+ const resultats=DASHBOARDS.filter(d=>{
+  const contenu=normaliser(d.nom+" "+d.categorie+" "+d.description);
+  return termes.every(t=>contenu.includes(t));
+ });
+ const fragment=document.createDocumentFragment();
+ resultats.forEach(d=>{
+  const carte=creerElement("article","dashboard-card");
+  carte.style.setProperty("--accent",d.couleur);
+  const haut=creerElement("div","card-top");
+  haut.append(creerElement("div","monogram",d.nom.charAt(0)),creerElement("span","category",d.categorie));
+  const lien=creerElement("a","open-link");
+  lien.href=d.url;lien.target="_blank";lien.rel="noopener noreferrer";
+  lien.setAttribute("aria-label","Ouvrir le dashboard "+d.nom+" dans un nouvel onglet");
+  const fleche=creerElement("span","","↗");fleche.setAttribute("aria-hidden","true");
+  lien.append(creerElement("span","","Ouvrir le dashboard"),fleche);
+  carte.append(haut,creerElement("h3","",d.nom),creerElement("p","description",d.description),lien,creerElement("p","new-tab","Ouverture dans un nouvel onglet"));
+  fragment.append(carte);
+ });
+ grid.replaceChildren(fragment);
+ empty.hidden=resultats.length>0;
+ count.textContent=resultats.length===DASHBOARDS.length
+  ?resultats.length+" dashboard"+(resultats.length>1?"s disponibles":" disponible")
+  :resultats.length+" sur "+DASHBOARDS.length+" dashboards affichés";
+}
+function appliquerTheme(theme){
+ document.documentElement.dataset.theme=theme;
+ themeButton.textContent=theme==="dark"?"Mode clair":"Mode sombre";
+ themeButton.setAttribute("aria-pressed",String(theme==="dark"));
+}
+let themeInitial=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+try{
+ const sauvegarde=localStorage.getItem("adm-portail-theme");
+ if(sauvegarde==="light"||sauvegarde==="dark")themeInitial=sauvegarde;
+}catch(erreur){}
+themeButton.addEventListener("click",()=>{
+ const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";
+ appliquerTheme(theme);
+ try{localStorage.setItem("adm-portail-theme",theme);}catch(erreur){}
+});
+search.addEventListener("input",afficherDashboards);
+appliquerTheme(themeInitial);
+afficherDashboards();
+</script>
+</body>
+</html>
