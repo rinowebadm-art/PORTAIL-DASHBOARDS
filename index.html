@@ -476,5 +476,36 @@ afficherDashboards();
     }
   }
 </style>
+  <script>
+(function () {
+  const logo = document.querySelector(".header-logo");
+  const bandeau = document.querySelector(".header");
+  if (!logo || !bandeau) return;
+  function harmoniserCouleur() {
+    if (!logo.naturalWidth || !logo.naturalHeight) return;
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = logo.naturalWidth;
+      canvas.height = logo.naturalHeight;
+      const contexte = canvas.getContext("2d", {
+        willReadFrequently: true
+      });
+      if (!contexte) return;
+      contexte.drawImage(logo, 0, 0);
+      const pixel = contexte.getImageData(0, 0, 1, 1).data;
+      if (pixel[3] !== 255) return;
+      bandeau.style.background =
+        "rgb(" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + ")";
+    } catch (erreur) {
+      console.warn("Impossible de lire la couleur du logo.", erreur);
+    }
+  }
+  if (logo.complete) {
+    harmoniserCouleur();
+  } else {
+    logo.addEventListener("load", harmoniserCouleur, { once: true });
+  }
+})();
+</script>
 </body>
 </html>
